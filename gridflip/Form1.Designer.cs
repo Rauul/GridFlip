@@ -43,7 +43,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 12);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(208, 394);
+            this.listBox1.Size = new System.Drawing.Size(210, 394);
             this.listBox1.TabIndex = 0;
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
@@ -52,7 +52,7 @@
             // 
             this.flipButton.Location = new System.Drawing.Point(11, 438);
             this.flipButton.Name = "flipButton";
-            this.flipButton.Size = new System.Drawing.Size(208, 23);
+            this.flipButton.Size = new System.Drawing.Size(211, 23);
             this.flipButton.TabIndex = 1;
             this.flipButton.Text = "Reverse Grid";
             this.flipButton.UseVisualStyleBackColor = true;
@@ -72,7 +72,7 @@
             // 
             // UpperNumericUpDown
             // 
-            this.UpperNumericUpDown.Location = new System.Drawing.Point(119, 412);
+            this.UpperNumericUpDown.Location = new System.Drawing.Point(122, 412);
             this.UpperNumericUpDown.Name = "UpperNumericUpDown";
             this.UpperNumericUpDown.Size = new System.Drawing.Size(100, 20);
             this.UpperNumericUpDown.TabIndex = 3;
