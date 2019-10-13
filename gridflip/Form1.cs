@@ -9,11 +9,25 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace gridflip
 {
     public partial class Form1 : Form
     {
+        public class Driver
+        {
+            public string Name;
+            public int Position;
+
+            public Driver(string name, int position)
+            {
+                Name = name;
+                Position = position;
+            }
+        }
+
+        List<Driver> drivers = new List<Driver>();
         string workdir;
 
         public Form1()
@@ -31,22 +45,30 @@ namespace gridflip
 
         private void listBox1_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
         {
+            listBox1.Items.Clear();
+            drivers.Clear();
 
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             var filePath = new StreamReader(s[0]);
             workdir = Path.GetDirectoryName(s[0]);
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc.Load(s[0]);
+            XmlNodeList xnlist = xmldoc.SelectNodes("/rFactorXML/RaceResults/Race/Driver");
 
-            string line;
-            while((line = filePath.ReadLine()) != null)
+            foreach (XmlNode node in xnlist)
             {
-                if (line.StartsWith("//"))
-                    continue;
+                string name = node.SelectSingleNode("Name").InnerText;
+                int position = Convert.ToInt32(node.SelectSingleNode("Position").InnerText);
 
-                line = line.Replace("/editgrid ", "");
-                line = line.Remove(0, 2);
-                line = line.TrimStart();
+                Driver driver = new Driver(name, position);
+                drivers.Add(driver);
+            }
 
-                listBox1.Items.Add(line);
+            drivers = drivers.OrderBy(o => o.Position).ToList();
+
+            foreach (Driver drv in drivers)
+            {
+                listBox1.Items.Add(drv.Name);
             }
         }
 
