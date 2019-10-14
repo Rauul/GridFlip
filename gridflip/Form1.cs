@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,11 +20,13 @@ namespace gridflip
         {
             public string Name;
             public int Position;
+            public float BestLap;
 
-            public Driver(string name, int position)
+            public Driver(string name, int position, float bestLap)
             {
                 Name = name;
                 Position = position;
+                BestLap = bestLap;
             }
         }
 
@@ -57,14 +60,28 @@ namespace gridflip
 
             foreach (XmlNode node in xnlist)
             {
+                CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
                 string name = node.SelectSingleNode("Name").InnerText;
                 int position = Convert.ToInt32(node.SelectSingleNode("Position").InnerText);
+                float bestLap = float.Parse(node.SelectSingleNode("BestLapTime").InnerText, NumberStyles.Any, ci);
 
-                Driver driver = new Driver(name, position);
+                Driver driver = new Driver(name, position, bestLap);
                 drivers.Add(driver);
             }
 
-            drivers = drivers.OrderBy(o => o.Position).ToList();
+            SortList();            
+        }
+
+        void SortList()
+        {
+            if (comboBox1.SelectedItem.ToString() == "Position")
+                drivers = drivers.OrderBy(o => o.Position).ToList();
+            else if (comboBox1.SelectedItem.ToString() == "Best Lap")
+                drivers = drivers.OrderBy(o => o.BestLap).ToList();
+
+            listBox1.Items.Clear();
 
             foreach (Driver drv in drivers)
             {
@@ -86,9 +103,11 @@ namespace gridflip
 
             listBox1.Items.Clear();
             listBox1.Items.AddRange(lines);
+        }
 
-
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(workdir, "reversed.ini")))
+        private void WriteButton_Click(object sender, EventArgs e)
+        {
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(workdir, "out.ini")))
             {
                 int i = 1;
                 foreach (string driver in listBox1.Items)
@@ -97,6 +116,16 @@ namespace gridflip
                     i++;
                 }
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            comboBox1.SelectedIndex = 0;
+        }
+
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SortList();
         }
     }
 }
